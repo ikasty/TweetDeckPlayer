@@ -8,7 +8,7 @@ const request = require('request');
 const child_process = require('child_process');
 const Util = require('./util');
 const VERSION = require('./version');
-const updateCheck = require('./update-check');
+const update = require('./update-check');
 
 // set to userdata folder
 app.setPath('userData', Util.getUserDataPath());
@@ -954,17 +954,32 @@ var run = chk_win => {
   ipcMain.on('page-ready-tdp', (event, arg) => {
     // 업데이트 체크
     if (Config.data.detectUpdate) {
-      setTimeout(updateCheck, 0, (err, latest) => {
+      var need_update = false;
+      setTimeout(update.check, 0, (err, latest, release) => {
         if (err) {
           // error check
           win.webContents.send('toast-message', "Update check failed");
         }
 
         const current = VERSION.value;
-        if (versionCompare(current, latest) < 0) {
-          win.webContents.send('toast-message', "Update required: newest version is " + latest);
+        need_update = (versionCompare(current, latest) < 0);
+
+        if (need_update) {
+          let message = "Update required: newest version is " + latest;
+          if (Config.data.autoUpdate) message += '. Start downloading update...';
+          win.webContents.send('toast-message', message);
         } else {
           win.webContents.send('toast-message', VERSION.message);
+        }
+
+        if (need_update && Config.data.autoUpdate) {
+          update.do(release, (err) => {
+            if (err) {
+              win.webContents.send('toast-message', "Downloading update failed");
+            } else {
+              win.webContents.send('toast-message', "Download finished. Please unzip it");
+            }
+          });
         }
       });
     }

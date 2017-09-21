@@ -221,6 +221,12 @@ module.exports = [
     valueType: 'bool',
     label: 'Check latest version on startup',
   },
+  {
+    _type: 'entry',
+    name: 'autoUpdate',
+    valueType: 'bool',
+    label: 'Update to latest automatically',
+  },
   { _type: 'subsection', label: 'Privacy' },
   {
     _type: 'entry',
