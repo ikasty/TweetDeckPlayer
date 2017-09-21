@@ -973,11 +973,18 @@ var run = chk_win => {
         }
 
         if (need_update && Config.data.autoUpdate) {
-          update.do(release, (err) => {
+          update.download(release, (err, filename) => {
             if (err) {
               win.webContents.send('toast-message', "Downloading update failed");
             } else {
-              win.webContents.send('toast-message', "Download finished. Please unzip it");
+              win.webContents.send('toast-message', "Download finished");
+              update.do(filename, (err) => {
+                if (err) {
+                  win.webContents.send('toast-message', "Auto update failed. Please unzip manually");
+                } else {
+                  win.webContents.send('toast-message', "Auto update success. Please restart application");
+                }
+              });
             }
           });
         }

@@ -225,7 +225,7 @@ module.exports = [
     _type: 'entry',
     name: 'autoUpdate',
     valueType: 'bool',
-    label: 'Update to latest automatically',
+    label: 'Download latest version automatically',
   },
   { _type: 'subsection', label: 'Privacy' },
   {
