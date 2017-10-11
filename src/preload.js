@@ -557,14 +557,18 @@ document.addEventListener('DOMContentLoaded', () => {
   window.toastMessage = message => {
     window.webpackJsonp([0], [(a, b, c) => {
       const toaster = c(7);
-      toaster.showNotification({ message });
+      if (typeof toaster.showNotification === 'function') {
+        toaster.showNotification({ message });
+      }
     }]);
   };
 
   window.toastErrorMessage = message => {
     window.webpackJsonp([0], [(a, b, c) => {
       const toaster = c(7);
-      toaster.showErrorNotification({ message });
+      if (typeof toaster.showErrorNotification === 'function') {
+        toaster.showErrorNotification({ message });
+      }
     }]);
   };
 
